@@ -1,0 +1,102 @@
+#lang scheme
+; Jalin Gatlin
+(require "project4test.scm")
+(define len
+  (lambda (lst)
+    (if (or (not (list? lst)) (null? lst))
+        0
+        (+ 1 (len (cdr lst))))))
+
+(define max
+  (lambda (lst)
+    (if (= (length lst) 1)
+        (car lst)
+        (if (> (car lst) (max (cdr lst)))
+            (car lst)
+            (max (cdr lst))))))
+
+(define rember
+  (lambda (ele lst)
+    (cond
+      ((null? lst) '())
+      ((eq? (car lst) ele) (cdr lst))
+      (else (cons (car lst) (rember ele (cdr lst)))))))
+
+(define atom?
+  (lambda (x)
+    (and (not (pair? x)) (not (null? x)))))
+
+(define (rev lst)
+  (cond
+    ((atom? lst) lst)
+    ((null? lst) '())
+      (else (append (rev (cdr lst)) (list (car lst))))))
+(define invert-help
+  (lambda (lst)
+    (cond
+      ((null? lst) '())
+      ((atom? lst) lst)
+      ((pair? (car lst)) (append (invert-help (cdr lst))(rev (car lst))))
+      
+      
+      (else (append (invert-help (cdr lst)) (list(car lst) ))))))
+
+      
+(define decrement
+  (lambda (x)
+    (- x 1)))  
+
+(define remove-next-to-last
+	(lambda (lst)		
+		(cond
+                  ((null? lst) '())
+		((null? (cddr lst)) (cdr lst))
+		(else (cons (car lst)(remove-next-to-last (cdr lst)))))))
+
+(define slope
+  (lambda (a b)
+    (/ (-(cdr b) (cdr a)) (-(car b) (car a)))))
+
+(define remove-dups
+  (lambda (lst)
+  (cond
+    ((null? lst) '())
+    ((null? (cdr lst))  lst)
+    ((eq? (car lst) (cadr lst)) ( remove-dups (cdr lst)))
+    (else(cons (car lst) (remove-dups (cdr lst)))))))
+
+(define invert    ; not fully done 
+ (lambda (lst)
+   (cond
+     ((null? lst)  '())
+     ((atom? lst) lst)
+       (else  (invert-help lst)))))
+
+(define insertion-sort
+  (lambda (lst)
+      (cond
+        ((null?  (cdr lst)) lst)
+        (( >=(car lst) (max ( cdr lst))) ( cons (car lst) (insertion-sort (cdr lst))))
+        (else  (append (list( max lst)) (insertion-sort(cons (car lst) (rember (max lst) (cdr lst)))))))))
+    
+       
+(define eval-poly
+  (lambda (p x)
+    (cond
+      ((null? p) 0) 
+      (else (+(* (power x (cdar p)) (caar p)) (eval-poly (cdr p) x))))))
+      
+      
+(define power
+  (lambda (x e)
+    (cond
+      ((zero? e) 1)
+      ((eq? e 1) x)
+      ((and (zero? x) (not(zero? e))) 0)
+      (else (* x  (power x (decrement e)))))))
+      
+    
+  (define get-poly-fun
+    (lambda (p)
+      (lambda (x)
+        (eval-poly p x))))
